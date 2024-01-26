@@ -7,7 +7,6 @@ public:
 
 private:
   Shape shape;
-  char sChar;
   Pixel::Color color;
   int rotation = 0;
 
@@ -21,10 +20,6 @@ public:
   Pixel::Color getColor()
   {
     return color;
-  }
-  char getSChar()
-  {
-    return sChar;
   }
 
   int getShape()
@@ -61,7 +56,6 @@ public:
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
         color = Pixel::Yellow;
-        sChar = 'O';
         break;
 
       case I:
@@ -70,7 +64,6 @@ public:
         matrix[1][2] = 'X';
         matrix[1][3] = 'X';
         color = Pixel::Cyan;
-        sChar = 'I';
         break;
  
       case T:
@@ -79,7 +72,6 @@ public:
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
         color = Pixel::White;
-        sChar = 'T';
         break;
 
       case J:
@@ -88,7 +80,6 @@ public:
         matrix[2][2] = 'X';
         matrix[1][0] = 'X';
         color = Pixel::Blue;
-        sChar = 'J';
         break;
 
       case L:
@@ -97,7 +88,6 @@ public:
         matrix[2][2] = 'X';
         matrix[1][2] = 'X';
         color = Pixel::Green;
-        sChar = 'L';
         break;
 
       case Z:
@@ -106,7 +96,6 @@ public:
         matrix[2][0] = 'X';
         matrix[2][1] = 'X';
         color = Pixel::Purple;
-        sChar = 'Z';
         break;
 
       case S:
@@ -115,7 +104,6 @@ public:
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
         color = Pixel::Red;
-        sChar = 'S';
         break;
     }
   }
