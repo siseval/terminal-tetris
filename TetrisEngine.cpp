@@ -83,8 +83,8 @@ private:
   }
   void lose()
   {
-    saveHigh();
-    raster -> addRString(3, 0, "-YOU  LOSE- ");
+    string topBar = saveHigh() ? "- NEW HIGH -" : "- YOU LOSE -";
+    raster -> addRString(3, 0, topBar);
     raster -> addRString(3, 21, "r to restart");
 
     lost = true;
@@ -94,11 +94,16 @@ private:
     ifstream scoreFile;
     scoreFile.open("highscore.txt");
     string sc; 
-    scoreFile >> sc; 
+    scoreFile >> sc;
+
+    if (sc == "")
+    {
+      sc = "0";
+    }
 
     high = stoi(sc);
   }
-  void saveHigh()
+  bool saveHigh()
   {
     if (high < score)
     {
@@ -106,7 +111,9 @@ private:
       ofstream scoreFile;
       scoreFile.open("highscore.txt", ofstream::out | ofstream::trunc);
       scoreFile << to_string(score);
+      return true;
     }
+    return false;
   }
   void restart()
   {
