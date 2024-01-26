@@ -43,6 +43,15 @@ public:
         cCount += 2;
       }
     }
+    void setPixelLight(int x, int y)
+    {
+      pixels[width * y + x].setLight();
+    }
+     void setPixelDark(int x, int y)
+    {
+      pixels[width * y + x].setDark();
+    }
+    
     void setPixelSyms(int x, int y, string s)
     {
       getPixel(x, y).setSyms(s);
@@ -88,6 +97,7 @@ public:
         for (int i = 0; i < width * height; i++)
         {
             pixels[i].setColor(Pixel::Reset);
+            pixels[i].setDark();
         }
     }
     void draw()

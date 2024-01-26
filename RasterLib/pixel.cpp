@@ -7,19 +7,21 @@ public:
   enum Color
 	{
 		Reset = 0,
-		Black = 30,
-		Red = 31,
-		Green = 32,
-		Yellow = 33,
-		Blue = 34,
-		Purple = 35,
-		Cyan = 36,
-		White = 37
+		Black = 40,
+		Red = 41,
+		Green = 42,
+		Yellow = 43,
+		Blue = 44,
+		Purple = 45,
+		Cyan = 46,
+		White = 47,
 	};
 
 private:
   Color color;
   string syms = "  ";
+
+  int isLight = 0;
 
 public:
 
@@ -35,7 +37,7 @@ public:
 
   string draw()
   {
-    return "\033[" + to_string(color + 10) + 'm' + syms + "\033[" + to_string(Reset) + 'm';
+    return "\033[" + to_string(color + isLight) + 'm' + syms + "\033[" + to_string(Reset) + 'm';
   }  
   Color getColor()
   {
@@ -48,5 +50,13 @@ public:
   void setSyms(string s)
   {
     syms = s;
+  }
+  void setLight()
+  {
+    isLight = 60;
+  }
+  void setDark()
+  {
+    isLight = 0;
   }
 };

@@ -190,6 +190,9 @@ private:
           storeCurTetro();
         }
         break;
+      case ' ':
+        slam();
+        break;
       case KEY_UP:
       case 'z':
         rotateCurTetro();
@@ -210,6 +213,11 @@ private:
       default:
         break;
     }
+  }
+  void slam()
+  {
+    Y += getLowestY();
+    placeCurTetro();
   }
 
   void move(int x, int y)
@@ -250,6 +258,7 @@ private:
 
   void drawCurTetro()
   {
+    int dy = getLowestY();
     for (int i = 0; i < 4; i++)
     {
       for (int j = 0; j < 4; j++)
@@ -257,9 +266,22 @@ private:
         if (curTetro.matrix[i][j] == 'X')
         {
           raster -> setPixel(j + X, i + Y, curTetro.getColor());
+          raster -> setPixel(j + X, i + Y + dy, curTetro.getColor());
+          raster -> setPixelLight(j + X, i + Y + dy);
         }
       }
     }
+  }
+  int getLowestY()
+  {
+    for (int i = 0; i < h; i++)
+    {
+      if (collidesDown(i))
+      {
+        return i - 1;
+      }
+    }
+    return h - Y - 1;
   }
 
   void storeCurTetro()
@@ -408,7 +430,7 @@ private:
   }
   bool collidesDown(int dy)
   {
-    for (int i = 0; i < 4; i++)
+    for (int i = 3; i >= 0; i--)
     {
       for (int j = 0; j < 4; j++)
       {
@@ -416,10 +438,6 @@ private:
         {
           if (board[Y + i + dy - 1][X + j] != 0 || Y + i + dy > 20)
           {
-            if (Y < 1)
-            {
-              lose();
-            }
             return true;
           }
         }
