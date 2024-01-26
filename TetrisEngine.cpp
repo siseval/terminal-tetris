@@ -33,6 +33,9 @@ private:
 
   bool lost = false;
 
+  int lineFlashMs = 100;
+  bool doingAnim = false;
+
   int ms = 60;
   int fallFrames = 5;
   int frameCount = 0;
@@ -150,6 +153,10 @@ private:
 
   void handleInput()
   {
+    if (doingAnim)
+    {
+      return;
+    }
     if (lost)
     {
       char c = getch();
@@ -484,16 +491,25 @@ private:
   void checkLines()
   {
     int clears = 0;
+    int lines[4] = {-1, -1, -1, -1};
     for (int i = 0; i < h; i++)
     {
       if (checkLine(i))
       {
-        clearLine(i);
+        lines[clears] = i;
         clears += 1;
       }
     }
     if (clears > 0)
     {
+      lineClearAnim(lines);
+      for (int i = 0; i < 4; i++)
+      {
+        if (lines[i] != -1)
+        {
+          clearLine(lines[i]);
+        }
+      }
       score += pointsPerLine[clears - 1] * mult;
       mult += 1;
     }
@@ -517,11 +533,42 @@ private:
   {
     for (int i = y - 1; i > 0; i--)
     {
-      for (int j = 1; j < w + 1; j++)
+      if (i < h)
       {
-        board[i + 1][j] = board[i][j]; 
+        for (int j = 1; j < w + 1; j++)
+        {
+          board[i + 1][j] = board[i][j]; 
+        }
       }
     }
+  }
+  void lineClearAnim(int lines[4])
+  {
+    doingAnim = true;
+    int linesBuf[5][w];
+    for (int c = 0; c < 4; c++)
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        if (lines[i] != -1)
+        {
+          for (int j = 1; j < w + 1; j++)
+          {
+            if (c == 0)
+            {
+              linesBuf[i][j] = board[lines[i]][j];
+            }
+            board[lines[i]][j] = c % 2 == 0 ? 0 : linesBuf[i][j];
+          }
+        }
+      }
+      resetRaster();
+      usleep(lineFlashMs * 1000);
+      drawBoard();
+      updateInfo();
+      raster -> draw();
+    }
+    doingAnim = false;
   }
 
   //  --- TIME & LOGIC ---  //
@@ -622,13 +669,8 @@ private:
   }
   void resetRaster()
   {
-    // clearConsole();
     raster -> clear();
     raster -> addBorder(Pixel::Black);
     raster -> addVerLine(Pixel::Black, 11, 1, 20);
-  }
-  void clearConsole() 
-  {
-    std::cout << "\x1B[2J\x1B[H";
   }
 };
