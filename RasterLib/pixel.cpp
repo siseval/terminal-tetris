@@ -33,11 +33,9 @@ public:
     color = Reset;
   }
 
-  void draw()
+  string draw()
   {
-    cout << "\033[" << color + 10 << 'm' << syms << "\033[" << Reset << 'm';
-    cout << flush;
-    cout.clear();
+    return "\033[" + to_string(color + 10) + 'm' + syms + "\033[" + to_string(Reset) + 'm';
   }  
   Color getColor()
   {

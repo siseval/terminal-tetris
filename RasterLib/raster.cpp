@@ -92,15 +92,18 @@ public:
     }
     void draw()
     {
-        for (int i = 0; i < width * height; i++)
+      string screen = "";
+      for (int i = 0; i < width * height; i++)
+      {
+        screen += pixels[i].draw(); 
+        if ((i + 1) % width == 0)
         {
-            pixels[i].draw();
-            if ((i + 1) % width == 0)
-            {
-                cout << '\n';
-                cout << '\r';
-            }
+          screen += '\n';
+          screen += '\r';
         }
+      }
+      screen += "\x1B[2J\x1B[H";
+      cout << screen;
     }
 
 

@@ -273,9 +273,6 @@ private:
       getNewTetro(); 
     }
     resetXY();
-    queue[1] = queue[0];
-    queue[2] = queue[1];
-    queue[3] = queue[2];
   }
 
 
@@ -552,7 +549,8 @@ private:
   
   void updateInfo()
   {
-    raster -> addRString(12, 1, ".TETRIS.");
+    raster -> addRString(12, 1, "<TETRIS>");
+
     raster -> addVerLine(Pixel::Black, 12, 1, 20);
     raster -> addVerLine(Pixel::Black, 13, 1, 20);
     raster -> addVerLine(Pixel::Black, 14, 1, 20);
@@ -573,7 +571,9 @@ private:
       highStr += " ";
     }
     raster -> addRString(12, 7, highStr);
-
+    
+    raster -> addRString(12, 9, "-=<()>=-");
+    
 
     raster -> addRString(12, 11, "NEXT: ");
     drawInfoTetro(Tetro(static_cast<Tetro::Shape>(queue[0])), 12, 12);
@@ -622,7 +622,7 @@ private:
   }
   void resetRaster()
   {
-    clearConsole();
+    // clearConsole();
     raster -> clear();
     raster -> addBorder(Pixel::Black);
     raster -> addVerLine(Pixel::Black, 11, 1, 20);
