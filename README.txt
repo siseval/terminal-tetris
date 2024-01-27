@@ -5,10 +5,10 @@ Of course you want to play tetris in a unix terminal.
 
 [INSTALLATION]:
   
-  1. You may have to install ncurses through a package manager.
-  2. cd to directory.
-  3. Compile project using: g++ -std=c++11 -lcurses -o Tetris Main.cpp
-  4. Run executable using: ./Tetris
+  1. Install the ncurses library through a package manager.
+  2. Create a build directory in the TerminalTetris-main directory, and cd to it.
+  3. Build the project through CMake with the commands: <cmake ..> followed by <make>.
+  4. Run executable with the command: <./tetris>.
 
 [CONTROLS]:
 
