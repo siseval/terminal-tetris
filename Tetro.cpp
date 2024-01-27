@@ -1,49 +1,6 @@
-#include "RasterLib/raster.cpp"
+#include <Tetro.h>
 
-class Tetro
-{
-public:
-  enum Shape{ O, I, T, J, L, Z, S };
-
-private:
-  Shape shape;
-  Pixel::Color color;
-  int rotation = 0;
-
-public:
-  char matrix[4][4] =   
-         {{ ' ', ' ', ' ', ' '},
-          { ' ', ' ', ' ', ' '},
-          { ' ', ' ', ' ', ' '},
-          { ' ', ' ', ' ', ' '}};
-
-  Pixel::Color getColor()
-  {
-    return color;
-  }
-
-  int getShape()
-  {
-    return shape;
-  }
-
-  void rotate()
-  {
-    if (rotation < 3)
-    {
-      rotation += 1;
-    }
-    else 
-    {  
-      rotation = 0; 
-    }
-  }
-  int getRotation()
-  {
-    return rotation;
-  }
-
-  Tetro(Shape s)
+Tetro::Tetro(Shape s)
   {
     shape = s;
     rotation = 0;
@@ -55,7 +12,7 @@ public:
         matrix[1][2] = 'X';
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
-        color = Pixel::Yellow;
+        color = RasterLib::Pixel::Yellow;
         break;
 
       case I:
@@ -63,7 +20,7 @@ public:
         matrix[1][1] = 'X';
         matrix[1][2] = 'X';
         matrix[1][3] = 'X';
-        color = Pixel::Cyan;
+        color = RasterLib::Pixel::Cyan;
         break;
  
       case T:
@@ -71,7 +28,7 @@ public:
         matrix[2][0] = 'X';
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
-        color = Pixel::White;
+        color = RasterLib::Pixel::White;
         break;
 
       case J:
@@ -79,7 +36,7 @@ public:
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
         matrix[1][0] = 'X';
-        color = Pixel::Blue;
+        color = RasterLib::Pixel::Blue;
         break;
 
       case L:
@@ -87,7 +44,7 @@ public:
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
         matrix[1][2] = 'X';
-        color = Pixel::Green;
+        color = RasterLib::Pixel::Green;
         break;
 
       case Z:
@@ -95,7 +52,7 @@ public:
         matrix[1][2] = 'X';
         matrix[2][0] = 'X';
         matrix[2][1] = 'X';
-        color = Pixel::Purple;
+        color = RasterLib::Pixel::Purple;
         break;
 
       case S:
@@ -103,8 +60,9 @@ public:
         matrix[1][1] = 'X';
         matrix[2][1] = 'X';
         matrix[2][2] = 'X';
-        color = Pixel::Red;
+        color = RasterLib::Pixel::Red;
         break;
     }
   }
-};
+
+

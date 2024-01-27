@@ -1,5 +1,5 @@
 #include <iostream>
-#include "TetrisEngine.cpp"
+#include <TetrisEngine.h>
 
 using namespace std;
 
