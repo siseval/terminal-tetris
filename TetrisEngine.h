@@ -23,6 +23,9 @@ private:
   int high = 0;
   int mult = 1;
 
+  bool doAnim = true;
+  bool showGhost = true;
+
   const static int infoWidth = 5;
 
   int board[h + 1][w + 1];
@@ -210,9 +213,24 @@ private:
       case 'q':
         quit();
         break;
+      case 'g':
+        toggleGhost();
+        break;
+      case 'h':
+        toggleAnim();
+        break;
       default:
         break;
     }
+  }
+
+  void toggleGhost()
+  {
+    showGhost = !showGhost;
+  }
+  void toggleAnim()
+  {
+    doAnim = !doAnim;
   }
   void slam()
   {
@@ -266,8 +284,12 @@ private:
         if (curTetro.matrix[i][j] == 'X')
         {
           raster -> setPixel(j + X, i + Y, curTetro.getColor());
-          raster -> setPixel(j + X, i + Y + dy, curTetro.getColor());
-          raster -> setPixelLight(j + X, i + Y + dy);
+
+          if (showGhost)
+          {
+            raster -> setPixel(j + X, i + Y + dy, curTetro.getColor());
+            raster -> setPixelLight(j + X, i + Y + dy);
+          }
         }
       }
     }
@@ -521,7 +543,11 @@ private:
     }
     if (clears > 0)
     {
-      lineClearAnim(lines);
+      if (doAnim)
+      {
+        lineClearAnim(lines);
+      }
+
       for (int i = 0; i < 4; i++)
       {
         if (lines[i] != -1)

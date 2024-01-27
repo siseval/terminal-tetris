@@ -15,4 +15,8 @@ Of course you want to play tetris in a unix terminal.
   - Arrow keys to move Tetromino.
   - Z or Up arrow to rotate Tetromino.
   - Spacebar to slam Tetronimo.
+
+  - G to toggle ghost visibility.
+  - H to toggle flashing animation on line-clears.
+
   - Q to quit.
