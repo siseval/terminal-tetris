@@ -10,7 +10,7 @@ namespace RasterLib
   {
       int width;
       int height;
-      Pixel* pixels;    
+      Pixel* pixels; 
   public:
       Raster()
       {
@@ -44,6 +44,16 @@ namespace RasterLib
         {
           std::string chars = std::string() + s[cCount] + s[cCount + 1];
           pixels[width * y + x + i].setSyms(chars);
+          cCount += 2;
+        }
+      }
+      void addHorRString(int x, int y, std::string s)
+      {
+        int cCount = 0;
+        for (int i = 0; i < s.size() / 2; i++)
+        {
+          std::string chars = std::string() + s[cCount] + s[cCount + 1];
+          pixels[width * (y + i) + x].setSyms(chars);
           cCount += 2;
         }
       }

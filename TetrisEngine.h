@@ -43,8 +43,13 @@ private:
   int lineFlashMs = 100;
   bool doingAnim = false;
 
+  int lvl = 1;
+  int maxLvl = 20;
+  int msPassed = 0;
+  int msToLvl = 40000;
+
   int ms = 60;
-  int fallFrames = 5;
+  int fallFrames = 22;
   int frameCount = 0;
   bool running = true;
 
@@ -148,7 +153,7 @@ private:
       {
         countFrame(); 
       }
-      waitFrame();
+      handleTime(); 
     }
   }
 
@@ -622,11 +627,28 @@ private:
   { 
     usleep(ms * 1000);
   }
+  void handleTime()
+  {
+    msPassed += ms;
+    if (msPassed >= msToLvl + lvl * 1000)
+    {
+      lvlUp();
+    }
+  }
+  void lvlUp()
+  {
+    msPassed = 0;
+    if (lvl >= maxLvl)
+    {
+      return;
+    }
+    lvl += 1;
+  }
   void countFrame()
   {
     frameCount += 1;
 
-    if (frameCount >= fallFrames)
+    if (frameCount >= fallFrames - lvl)
     {
       tetroFall();
       resetFrameCount();
@@ -639,40 +661,47 @@ private:
 
   //  --- RASTER ---  //
   
+  int addY = 1;
   void updateInfo()
   {
-    raster -> addRString(12, 1, "<TETRIS>");
+    if (!lost)
+    {
+      raster -> addRString(12, 1, "<TETRIS>");
+    }
+    
+    std::string lvlStr = lvl > 9 ? std::to_string(lvl) : "0" + std::to_string(lvl);
+    raster -> addRString(12, 1 + addY, "LVL: " + lvlStr + " ");
 
     raster -> addVerLine(RasterLib::Pixel::Black, 12, 1, 20);
     raster -> addVerLine(RasterLib::Pixel::Black, 13, 1, 20);
     raster -> addVerLine(RasterLib::Pixel::Black, 14, 1, 20);
     raster -> addVerLine(RasterLib::Pixel::Black, 15, 1, 20);
 
-    raster -> addRString(12, 3, "SCORE:");
+    raster -> addRString(12, 3 + addY, "SCORE:");
     std::string scoreStr = std::to_string(score);
     while (scoreStr.length() < 8)
     {
       scoreStr += " ";
     }
-    raster -> addRString(12, 4, scoreStr);
+    raster -> addRString(12, 4 + addY, scoreStr);
 
-    raster -> addRString(12, 6, "HIGH: ");
+    raster -> addRString(12, 6 + addY, "HIGH: ");
     std::string highStr = std::to_string(high);
     while (highStr.length() < 8)
     {
       highStr += " ";
     }
-    raster -> addRString(12, 7, highStr);
+    raster -> addRString(12, 7 + addY, highStr);
     
-    raster -> addRString(12, 9, "-=<()>=-");
+    raster -> addRString(12, 9 + addY, "-=<()>=-");
     
 
-    raster -> addRString(12, 11, "NEXT: ");
-    drawInfoTetro(Tetro(static_cast<Tetro::Shape>(queue[0])), 12, 12);
-    raster -> addRString(12, 16, "HELD: ");
+    raster -> addRString(12, 11 + addY, "NEXT: ");
+    drawInfoTetro(Tetro(static_cast<Tetro::Shape>(queue[0])), 12, 12 + addY);
+    raster -> addRString(12, 16 + addY, "HELD: ");
     if (held != -1)
     {
-      drawInfoTetro(Tetro(static_cast<Tetro::Shape>(held)), 12, 17);
+      drawInfoTetro(Tetro(static_cast<Tetro::Shape>(held)), 12, 17 + addY);
     }
   }
   void drawInfoTetro(Tetro t, int x, int y)
