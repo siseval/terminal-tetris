@@ -23,6 +23,7 @@ namespace RasterLib
 
   private:
   Color color;
+  Color symCol = Color::Reset;
   std::string syms = "  ";
 
   int isLight = 0;
@@ -41,7 +42,8 @@ namespace RasterLib
 
   std::string draw()
   {
-    return "\033[" + std::to_string(color + isLight) + 'm' + syms + "\033[" + std::to_string(Reset) + 'm';
+    std::string sCol = symCol == Color::Reset ? "" : "\033[" + std::to_string(symCol - 10) + 'm';
+    return sCol + "\033[" + std::to_string(color + isLight) + 'm' + syms + "\033[" + std::to_string(Reset) + 'm';
   }  
   Color getColor()
   {
@@ -50,6 +52,10 @@ namespace RasterLib
   void setColor(Color col)
   {
     color = col;
+  }
+  void setSymCol(Color col)
+  {
+    symCol = col;
   }
   void setSyms(std::string s)
   {

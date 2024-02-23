@@ -37,13 +37,14 @@ namespace RasterLib
           return pixels[i];
       }
 
-      void addRString(int x, int y, std::string s)
+      void addRString(int x, int y, std::string s, Pixel::Color col = Pixel::Color::Reset)
       {
         int cCount = 0;
         for (int i = 0; i < s.size() / 2; i++)
         {
           std::string chars = std::string() + s[cCount] + s[cCount + 1];
           pixels[width * y + x + i].setSyms(chars);
+          pixels[width * y + x + i].setSymCol(col);
           cCount += 2;
         }
       }

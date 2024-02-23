@@ -35,7 +35,7 @@ private:
   int X = 4;
   int Y = 0;
 
-  int pointsPerLine[4] = {2000, 3000, 5000, 8000};
+  int pointsPerLine[4] = {1000, 2000, 3000, 8000};
   int pointsPerPlace = 80;
 
   bool lost = false;
@@ -44,12 +44,22 @@ private:
   bool doingAnim = false;
 
   int lvl = 1;
-  int maxLvl = 20;
-  int msPassed = 0;
-  int msToLvl = 40000;
+  int maxLvl = 8;
+  int linesCleared = 0;
+  int linesToLvl = 4;
+
+  RasterLib::Pixel::Color lvlFlashCol = RasterLib::Pixel:: Red;
+  RasterLib::Pixel::Color scoreFlashCol = RasterLib::Pixel::Yellow;
+
+  int lvlFlashFrames = 8;
+  int scoreFlashFrames = 6;
+
+  int lvlFlashCount = lvlFlashFrames;
+  int scoreFlashCount = scoreFlashFrames;
 
   int ms = 60;
   int fallFrames = 22;
+  int fallFrameArr[8] = {22, 16, 12, 8, 6, 5, 4, 3};
   int frameCount = 0;
   bool running = true;
 
@@ -126,7 +136,7 @@ private:
     clearBoard();
     held = -1;
     lvl = 0;
-    msPassed = 0;
+    linesCleared = 0;
     run();
   }
   void quit()
@@ -155,7 +165,6 @@ private:
       {
         countFrame(); 
       }
-      handleTime(); 
     }
   }
 
@@ -359,7 +368,7 @@ private:
       }
     }
     checkLines();
-    score += pointsPerPlace * mult; 
+    addScore(pointsPerPlace * mult); 
     getNewTetro();
   }
 
@@ -599,7 +608,17 @@ private:
   }
   
   //  --- CLEARING LINES ---  //
+  
+  
+  void addScore(int s, bool col = false)
+  {
+    score += s;
 
+    if (col)
+    {
+      scoreFlashCount = 0;
+    }
+  }
   void checkLines()
   {
     int clears = 0;
@@ -614,11 +633,11 @@ private:
     }
     if (clears > 0)
     {
+      addScore(pointsPerLine[clears - 1] * mult, true);
       if (doAnim)
       {
         lineClearAnim(lines);
       }
-
       for (int i = 0; i < 4; i++)
       {
         if (lines[i] != -1)
@@ -626,7 +645,6 @@ private:
           clearLine(lines[i]);
         }
       }
-      score += pointsPerLine[clears - 1] * mult;
       mult += 1;
     }
     else 
@@ -647,6 +665,11 @@ private:
   }
   void clearLine(int y)
   {
+    linesCleared += 1;
+    if (linesCleared >= linesToLvl)
+    {
+      lvlUp();
+    }
     for (int i = y - 1; i > 0; i--)
     {
       if (i < h)
@@ -693,28 +716,31 @@ private:
   { 
     usleep(ms * 1000);
   }
-  void handleTime()
-  {
-    msPassed += ms;
-    if (msPassed >= msToLvl + lvl * 1000)
-    {
-      lvlUp();
-    }
-  }
   void lvlUp()
   {
-    msPassed = 0;
+    linesCleared = 0;
     if (lvl >= maxLvl)
     {
       return;
     }
     lvl += 1;
+    lvlFlashCount = 0;
+    fallFrames = fallFrameArr[lvl - 1];
   }
   void countFrame()
   {
     frameCount += 1;
 
-    if (frameCount >= fallFrames - lvl)
+    if (scoreFlashCount <= scoreFlashFrames)
+    {
+      scoreFlashCount += 1;
+    }
+    if (lvlFlashCount <= lvlFlashFrames)
+    {
+      lvlFlashCount += 1;
+    }
+
+    if (frameCount >= fallFrames)
     {
       tetroFall();
       resetFrameCount();
@@ -736,7 +762,7 @@ private:
     }
     
     std::string lvlStr = lvl > 9 ? std::to_string(lvl) : "0" + std::to_string(lvl);
-    raster -> addRString(12, 1 + addY, "LVL: " + lvlStr + " ");
+    raster -> addRString(12, 1 + addY, "LVL: " + lvlStr + " ", lvlFlashCount < lvlFlashFrames && lvlFlashCount % 2 == 0 ? lvlFlashCol : RasterLib::Pixel::Reset);
 
     raster -> addVerLine(RasterLib::Pixel::Black, 12, 1, 20);
     raster -> addVerLine(RasterLib::Pixel::Black, 13, 1, 20);
@@ -749,7 +775,7 @@ private:
     {
       scoreStr += " ";
     }
-    raster -> addRString(12, 4 + addY, scoreStr);
+    raster -> addRString(12, 4 + addY, scoreStr, scoreFlashCount < (doAnim ? 1 : scoreFlashFrames) ? scoreFlashCol : RasterLib::Pixel::Reset);
 
     raster -> addRString(12, 6 + addY, "HIGH: ");
     std::string highStr = std::to_string(high);
