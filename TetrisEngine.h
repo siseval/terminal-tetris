@@ -125,6 +125,8 @@ private:
     lost = false;
     clearBoard();
     held = -1;
+    lvl = 0;
+    msPassed = 0;
     run();
   }
   void quit()
@@ -258,7 +260,7 @@ private:
       {
         y = 0;
 
-        if (Y < 2)
+        if (Y < 0)
         {
           lose();
         }
@@ -339,13 +341,20 @@ private:
     {
       for (int j = 0; j < 4; j++)
       {
-        if (i + Y - 1 < 1)
+        if (checkOOB(i + Y - 1))
         {
-          return;
+          break;
         }
         if (curTetro.matrix[i][j] == 'X')
         {
-          board[i + Y - 1][j + X] = curTetro.getColor();
+          if (board[i + Y - 1][j + X] != 0)
+          {
+            lose();
+          }
+          else 
+          {
+            board[i + Y - 1][j + X] = curTetro.getColor();
+          }
         }
       }
     }
@@ -362,7 +371,7 @@ private:
     {
       for (int j = 0; j < 4; j++)
       {
-        matrix[i][j] = curTetro.matrix[3-j][i];
+        matrix[i][j] = curTetro.matrix[j][3-i];
       }
     }
  
@@ -422,12 +431,25 @@ private:
     }
   }
 
+  bool checkOOB(int y)
+  {
+    if (y < 0)
+    {
+      return true;
+    }
+    return false;
+  }
+
   bool collidesRight(int dx)
   {
     for (int i = 0; i < 4; i++)
     {
       for (int j = 0; j < 4; j++)
       {
+        if (checkOOB(Y + (3 - i) - 1))
+        {
+          break;
+        }
         if (curTetro.matrix[i][j] == 'X')
         {
           if (board[Y + i - 1][X + j + dx] != 0 || X + j + dx > 10)
@@ -445,6 +467,10 @@ private:
     {
       for (int j = 0; j < 4; j++)
       {
+        if (checkOOB(Y + (3 - i) - 1))
+        {
+          break;
+        }
         if (curTetro.matrix[i][j] == 'X')
         {
           if (board[Y + i - 1][X + j - dx] != 0 || X + j - dx < 1)
@@ -462,6 +488,10 @@ private:
     {
       for (int j = 0; j < 4; j++)
       {
+        if (checkOOB(Y + (3 - i) + dy - 1))
+        {
+          break;
+        }
         if (curTetro.matrix[i][j] == 'X')
         {
           if (board[Y + i + dy - 1][X + j] != 0 || Y + i + dy > 20)
@@ -496,15 +526,51 @@ private:
     move(0, 1);
   }
   
+  int bag[7] = {-1, -1, -1, -1, -1, -1, -1};
   void fillQueue()
   {
     for (int i = 0; i < 4; i++)
     {
       if (queue[i] < 0)
       {
-        int r = arc4random() % (7);
+        int r = -1;
+        while (r == -1)
+        {
+          bool succ = true;
+          int potR = random() % (7);
+          for (int i = 0; i < 7; i++)
+          {
+            if (potR == bag[i])
+            {
+              succ = false;
+            }
+          }
+          if (succ)
+          {
+            r = potR;
+          }
+        }
+        bag[bagIndex] = r;
+        handleBagIndex();
         queue[i] = r;
       }
+    }
+  }
+  int bagIndex = 0;
+  void handleBagIndex()
+  {
+    bagIndex += 1;
+    if (bagIndex >= 7)
+    {
+      bagIndex = 0;
+      clearBag();
+    }
+  }
+  void clearBag()
+  {
+    for (int i = 0; i < 7; i++)
+    {
+      bag[i] = -1;
     }
   }
   void clearQueue()
