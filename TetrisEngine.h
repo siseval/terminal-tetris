@@ -18,7 +18,7 @@ private:
 
   const static int h = 20;
   const static int w = 10;
-
+// :)
   int score = 0;
   int high = 0;
   int mult = 1;
@@ -40,13 +40,13 @@ private:
 
   bool lost = false;
 
-  int lineFlashMs = 100;
+  int lineFlashMs = 60;
   bool doingAnim = false;
 
   int lvl = 1;
   int maxLvl = 8;
   int linesCleared = 0;
-  int linesToLvl = 4;
+  int linesToLvl = 40;
 
   RasterLib::Pixel::Color lvlFlashCol = RasterLib::Pixel:: Red;
   RasterLib::Pixel::Color scoreFlashCol = RasterLib::Pixel::Yellow;
