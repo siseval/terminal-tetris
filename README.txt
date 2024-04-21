@@ -1,3 +1,5 @@
+![alt-text](https://github.com/siseval/TerminalTetris/blob/main/gameplay.gif)
+
 -=<TERMINAL TETRIS>=-
 
 Of course you want to play tetris in a unix terminal.
@@ -20,3 +22,4 @@ Of course you want to play tetris in a unix terminal.
   - H to toggle flashing animation on line-clears.
 
   - Q to quit.
+
