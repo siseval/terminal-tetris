@@ -13,7 +13,8 @@ Of course you want to play tetris in a unix terminal.
 [CONTROLS]:
 
   - Arrow keys to move Tetromino.
-  - Z or Up arrow to rotate Tetromino.
+  - Up arrow to soft fall Tetronimo.
+  - Z and X to rotate Tetromino clockwise and counterclockwise respectively. 
   - Spacebar to slam Tetronimo.
 
   - G to toggle ghost visibility.

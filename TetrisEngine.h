@@ -213,8 +213,13 @@ private:
         slam();
         break;
       case KEY_UP:
+        softFall();
+        break;
       case 'z':
         rotateCurTetro();
+        break;
+      case 'x':
+        rotateCurTetro(false);
         break;
       case KEY_RIGHT:
         move(1, 0);
@@ -253,6 +258,10 @@ private:
     Y += getLowestY();
     placeCurTetro();
   }
+  void softFall()
+  {
+    Y += getLowestY();
+  } 
 
   void move(int x, int y)
   {
@@ -372,18 +381,30 @@ private:
     getNewTetro();
   }
 
-  void rotateCurTetro()
+  void rotateCurTetro(bool clockWise = true)
   {
     char matrix[4][4];
     
-    for (int i = 0; i < 4; i++)
+    if (clockWise) 
     {
-      for (int j = 0; j < 4; j++)
+      for (int i = 0; i < 4; i++)
       {
-        matrix[i][j] = curTetro.matrix[j][3-i];
+        for (int j = 0; j < 4; j++)
+        {
+          matrix[i][j] = curTetro.matrix[j][3-i];
+        }
       }
     }
- 
+    else 
+    {
+      for (int i = 0; i < 4; i++)
+      {
+        for (int j = 0; j < 4; j++)
+        {
+          matrix[i][j] = curTetro.matrix[3 - j][i];
+        }
+      }
+    }
     for (int i = 0; i < 4; i++)
     {
       for (int j = 0; j < 4; j++)
